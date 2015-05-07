@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="libs/fluent-hc-4.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/gson-2.2.4.jar" sourcepath="libs/gson-2.2.4-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/victor.klochkov/Victor/Java/Libs/google-gson-2.2.4/gson-2.2.4-javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/httpclient-4.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-cache-4.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-win-4.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpcore-4.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpmime-4.4.1.jar"/>
+	<classpathentry kind="lib" path="libs/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/swt.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.4.jar" sourcepath="libs/commons-io-2.4-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/victor.klochkov/Victor/Java/Libs/commons-io-2.4/commons-io-2.4-javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
