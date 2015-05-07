@@ -1,4 +1,4 @@
-package com.vkpublisher;
+package com.viktor235.vkpublisher;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

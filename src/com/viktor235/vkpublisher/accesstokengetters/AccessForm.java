@@ -1,4 +1,4 @@
-package com.vkpublisher;
+package com.viktor235.vkpublisher.accesstokengetters;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;

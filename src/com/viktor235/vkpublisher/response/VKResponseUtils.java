@@ -1,4 +1,4 @@
-package com.vkpublisher.response;
+package com.viktor235.vkpublisher.response;
 
 public class VKResponseUtils
 {

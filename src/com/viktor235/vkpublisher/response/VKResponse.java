@@ -1,4 +1,4 @@
-package com.vkpublisher.response;
+package com.viktor235.vkpublisher.response;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
