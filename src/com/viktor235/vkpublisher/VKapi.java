@@ -1,4 +1,4 @@
-package com.vkpublisher;
+package com.viktor235.vkpublisher;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -11,8 +11,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.vkpublisher.response.VKResponse;
-import com.vkpublisher.response.VKResponseUtils;
+import com.viktor235.vkpublisher.response.VKResponse;
+import com.viktor235.vkpublisher.response.VKResponseUtils;
 
 public class VKapi{
 	private HttpClient httpClient;
@@ -115,8 +115,7 @@ public class VKapi{
 		VKResponse vkResponse = sendRequest(post);
 
 		if (!vkResponse.isError())
-			return VKResponseUtils.getFirstUserId(vkResponse);
-			/*try
+			try
 			{
 				return VKResponseUtils.getFirstUserId(vkResponse);
 			}
@@ -124,7 +123,7 @@ public class VKapi{
 			{
 				System.out.println("Error in user ID parsing: " + e.getMessage());
 				return 0;
-			}*/
+			}
 		return 0;
     }
 

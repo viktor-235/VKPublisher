@@ -1,15 +1,17 @@
-package com.vkpublisher;
+package com.viktor235.vkpublisher;
 
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+
+import com.viktor235.vkpublisher.accesstokengetters.WebGUIAccessTokenGetter;
 
 public class VKPublisher
 {
 	public static void main(String[] args) throws ClientProtocolException, IOException
 	{
 		VKapi vk = new VKapi();
-		AccessTokenGetter atg = new AccessTokenGetter(vk);
+		WebGUIAccessTokenGetter atg = new WebGUIAccessTokenGetter(vk);
 		vk.setAccessToken(atg.getAccessToken());
 		
 		System.out.println(vk.getNewMessage());

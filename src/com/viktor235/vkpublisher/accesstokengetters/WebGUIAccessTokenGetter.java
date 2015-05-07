@@ -1,18 +1,19 @@
-package com.vkpublisher;
+package com.viktor235.vkpublisher.accesstokengetters;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.utils.FileUtils;
+import com.viktor235.utils.FileUtils;
+import com.viktor235.vkpublisher.VKapi;
 
-public class AccessTokenGetter
+public class WebGUIAccessTokenGetter
 {
 	private VKapi vkApi;
 	private String fileWithAT = "config.cfg";
 	
-	public AccessTokenGetter(VKapi vkApi)
+	public WebGUIAccessTokenGetter(VKapi vkApi)
 	{
 		this.vkApi = vkApi;
 	}
