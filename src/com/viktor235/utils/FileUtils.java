@@ -19,11 +19,11 @@ public class FileUtils
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("Файл не найден.");
+			System.out.println(e.getMessage());
 		}
 		catch (IOException e)
 		{
-			System.out.println("Произошла ошибка I/O");
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -45,11 +45,11 @@ public class FileUtils
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("Файл не найден.");
+			System.out.println(e.getMessage());
 		}
 		catch (IOException e)
 		{
-			System.out.println("Произошла ошибка I/O");
+			System.out.println(e.getMessage());
 		}
 		
         return sb.toString();

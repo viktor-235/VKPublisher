@@ -1,4 +1,4 @@
-package com.viktor235.vkpublisher.accesstokengetters;
+package com.viktor235.vkpublisher.accesstoken;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -7,24 +7,19 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class AccessForm
-{
+public class AccessForm {
 	private String url = null;
-	
-	public void openForm(String url)
-	{
+
+	public void openForm(String url) {
 		final Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		shell.setSize(650, 500);
-		
+
 		Browser browser = null;
-		try
-		{
+		try {
 			browser = new Browser(shell, SWT.NONE);
-		}
-		catch (SWTError e)
-		{
+		} catch (SWTError e) {
 			/*
 			 * The Browser widget throws an SWTError if it fails to instantiate
 			 * properly. Application code should catch this SWTError and disable
@@ -33,30 +28,24 @@ public class AccessForm
 			 * website.
 			 */
 		}
-		if (browser != null)
-		{
+		if (browser != null) {
 			/* The Browser widget can be used */
 			this.url = url;
 			browser.setUrl(url);
 		}
-		
+
 		shell.open();
-		while (!shell.isDisposed())
-		{
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
-			else
-				if (!browser.isDisposed())
-				{
-					this.url = browser.getUrl();
-					//System.out.println(browser.getCookie("TestCockie", "http://vk.com"));
-				}
+			else if (!browser.isDisposed()) {
+				this.url = browser.getUrl();
+			}
 		}
 		display.dispose();
 	}
-	
-	public String getUrl()
-	{
+
+	public String getUrl() {
 		return url;
 	}
 }
