@@ -3,21 +3,28 @@ package com.viktor235.vkpublisher;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-import javax.naming.directory.InvalidAttributesException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
 import com.viktor235.vkpublisher.response.VKResponse;
 import com.viktor235.vkpublisher.response.VKResponseUtils;
 
 public class VKapi {
+	//private CloseableHttpClient httpClient;
 	private HttpClient httpClient;
 
 	private String client_id = "4786761";
@@ -29,8 +36,21 @@ public class VKapi {
 	private AccessToken access_token = null;
 
 	public VKapi() {
+		//httpClient = HttpClients.createDefault();
 		httpClient = new DefaultHttpClient();
 	}
+	
+	/*public void dispose()
+	{
+		try
+		{
+			httpClient.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}*/
 
 	public String getConnectionUrl() {
 		return "http://oauth.vk.com/authorize?" +
@@ -64,11 +84,32 @@ public class VKapi {
 	}
 
 	public boolean validateAccessToken(String accessToken) {
-		String post = "https://api.vk.com/method/users.search?" +
+		/*String post = "https://api.vk.com/method/users.search?" +
 		        "q=Durov" +
 		        "&count=1" +
 		        "&v=" + version +
 		        "&access_token=" + accessToken;
+		return !sendRequest(post).isError();*/
+		
+		HttpPost post = new HttpPost("https://api.vk.com/method/users.search");
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("q", "Durov"));
+		params.add(new BasicNameValuePair("count", "1"));
+		params.add(new BasicNameValuePair("v", version));
+		params.add(new BasicNameValuePair("access_token", accessToken));
+
+		UrlEncodedFormEntity entity = null;
+		try
+		{
+			entity = new UrlEncodedFormEntity(params, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		post.setEntity(entity);
+		
 		return !sendRequest(post).isError();
     }
     
@@ -88,10 +129,13 @@ public class VKapi {
 	 */
 
 	public VKResponse sendRequest(String request) {
-		HttpPost httpPost = new HttpPost(request);
+		return sendRequest(new HttpPost(request));
+	}
+
+	public VKResponse sendRequest(HttpPost request) {
 		String jsonResponse = null;
 		try {
-			HttpResponse response = httpClient.execute(httpPost);
+			HttpResponse response = httpClient.execute(request);
 			jsonResponse = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -186,6 +230,7 @@ public class VKapi {
 
 	// Post to User wall or Public wall. if owner_id == null then post to SELF user wall
 	public void postToWall(Integer owner_id, String message, boolean fromGroupName) {
+		message = encodeToURL(message);
 		String post = "https://api.vk.com/method/wall.post?" +
 		        (owner_id != null ? "owner_id=" + owner_id : "") +
 		        "&from_group=" + (fromGroupName ? "1" : "0") +
@@ -198,12 +243,83 @@ public class VKapi {
 	/* Photo */
 
 	// If groupId = 0 then upload to user wall
-	public void getUrlForUploadPhotoToWall(int groupId) {
+	public String getWallUploadServer(int groupId) {
 		String post = "https://api.vk.com/method/photos.getWallUploadServer?" +
 		        (groupId != 0 ? "group_id=" + Math.abs(groupId) : "") +
 		        "&v=" + version +
 		        "&access_token=" + access_token;
-		sendRequest(post);
-		//parse response
+		VKResponse vkResponse = sendRequest(post);
+		if (!vkResponse.isError())
+			try {
+				return VKResponseUtils.getUploadURL(vkResponse);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Error in response parsing: " + e.getMessage());
+				return null;
+			}
+		return null;
+	}
+	
+	public void uploadPhotoToWall(int groupID, byte[] photoByteArray)
+	{
+		System.out.println("Getting upload server url");
+		String uploadServerURL = getWallUploadServer(groupID);
+		HttpPost httppost = new HttpPost(uploadServerURL);
+        MultipartEntity mpEntity = new MultipartEntity();
+
+        /*Pattern pat = Pattern.compile("[\\&\\?]hash=([0123456789abcdef]+)");
+        Matcher m = pat.matcher(uploadServerURL);
+        m.find();
+        String hash = m.group(1);
+        System.out.println(hash);*/
+        
+        ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray, "photo.jpg");
+        mpEntity.addPart("photo", byteArrayBody);
+
+        httppost.setEntity(mpEntity);
+
+		System.out.println("Sending photo to server");
+		VKResponse vkResponse = sendRequest(httppost);
+
+        String server = VKResponseUtils.getServer(vkResponse);
+		String photo = VKResponseUtils.getPhoto(vkResponse);
+        String hash = VKResponseUtils.getHash(vkResponse);
+		System.out.println(server+"___"+photo+"___"+hash);
+        
+        /* Save photo */
+		HttpPost httpPost = new HttpPost("https://api.vk.com/method/photos.saveWallPhoto");
+		
+        String post = "https://api.vk.com/method/photos.saveWallPhoto?" +
+        "server=" + server +
+        "&photo=" + photo +
+        "&hash=" + hash +
+        "&v=" + version +
+        "&access_token=" + access_token.toString();
+        
+        
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+        nameValuePairs.add(new BasicNameValuePair("access_token", access_token.toString()));
+        nameValuePairs.add(new BasicNameValuePair("photo", photo));
+        
+        nameValuePairs.add(new BasicNameValuePair("server", server));
+        nameValuePairs.add(new BasicNameValuePair("hash", hash));
+        try
+		{
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try
+		{
+			System.out.println(IOUtils.toString(httpPost.getEntity().getContent(), "UTF-8"));
+		}
+		catch (UnsupportedOperationException | IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        VKResponse response = sendRequest(httpPost);
 	}
 }
