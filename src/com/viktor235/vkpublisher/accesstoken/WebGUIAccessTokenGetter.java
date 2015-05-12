@@ -1,9 +1,18 @@
 package com.viktor235.vkpublisher.accesstoken;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 import com.viktor235.vkpublisher.VKapi;
 
 public class WebGUIAccessTokenGetter implements AccessTokenGetter {
 	private VKapi vkApi;
+	
+	static {
+		//loadSwtJar();
+	}
 
 	public WebGUIAccessTokenGetter(VKapi vkApi) {
 		this.vkApi = vkApi;
@@ -21,4 +30,5 @@ public class WebGUIAccessTokenGetter implements AccessTokenGetter {
 		String atText = vkApi.parseAccessToken(getUrlWithATFromBrowser(vkApi.getConnectionUrl()));
 		return new AccessToken(atText);
 	}
+	
 }
