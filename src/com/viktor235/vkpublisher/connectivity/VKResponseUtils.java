@@ -1,4 +1,4 @@
-package com.viktor235.vkpublisher.response;
+package com.viktor235.vkpublisher.connectivity;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

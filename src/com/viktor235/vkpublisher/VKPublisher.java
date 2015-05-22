@@ -25,7 +25,8 @@ public class VKPublisher {
 
 		vk.setAccessToken(at);
 
-		// System.out.println(vk.getNewMessage());
+		vk.sendMessage("viktor_klochkov", "Test Message");
+		//System.out.println(vk.getNewMessage());
 		//System.out.println(vk.getUserId("rissolenka"));
 		//System.out.println(vk.getUserId("viktor_klochkov"));
 

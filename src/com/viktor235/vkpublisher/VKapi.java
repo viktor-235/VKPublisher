@@ -14,18 +14,19 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
-import com.viktor235.vkpublisher.response.VKResponse;
-import com.viktor235.vkpublisher.response.VKResponseUtils;
+import com.viktor235.vkpublisher.connectivity.VKRequest;
+import com.viktor235.vkpublisher.connectivity.VKResponse;
+import com.viktor235.vkpublisher.connectivity.VKResponseUtils;
 
 public class VKapi {
 	//private CloseableHttpClient httpClient;
 	private HttpClient httpClient;
+	//private BasicHttpContext localContext;
+	//private BasicCookieStore cookieStore;
 
 	private String client_id = "4786761";
 	private String scope = "offline,messages,status,wall,photos";
@@ -38,6 +39,13 @@ public class VKapi {
 	public VKapi() {
 		//httpClient = HttpClients.createDefault();
 		httpClient = new DefaultHttpClient();
+
+		/*this.cookieStore = new BasicCookieStore();
+		((AbstractHttpClient) this.httpClient).setCookieStore(this.cookieStore);
+		// Create local HTTP context
+		this.localContext = new BasicHttpContext();
+		// Bind custom cookie store to the local context
+		this.localContext.setAttribute(ClientContext.COOKIE_STORE, this.cookieStore);*/
 	}
 	
 	/*public void dispose()
@@ -91,7 +99,7 @@ public class VKapi {
 		        "&access_token=" + accessToken;
 		return !sendRequest(post).isError();*/
 		
-		HttpPost post = new HttpPost("https://api.vk.com/method/users.search");
+		/*HttpPost post = new HttpPost("https://api.vk.com/method/users.search");
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("q", "Durov"));
 		params.add(new BasicNameValuePair("count", "1"));
@@ -109,8 +117,15 @@ public class VKapi {
 			e.printStackTrace();
 		}
 		post.setEntity(entity);
-		
-		return !sendRequest(post).isError();
+		return !sendRequest(post).isError();*/
+
+		VKRequest request = new VKRequest(httpClient, "https://api.vk.com/method/users.search");
+		request.addParam("q", "Durov");
+		request.addParam("count", "1");
+		request.addParam("v", version);
+		request.addParam("access_token", accessToken);
+		VKResponse response = request.send();
+		return !response.isError();
     }
     
 	public void setAccessToken(AccessToken accessToken) {
@@ -128,7 +143,7 @@ public class VKapi {
 	 * return strBuff.toString(); }
 	 */
 
-	public VKResponse sendRequest(String request) {
+	/*public VKResponse sendRequest(String request) {
 		return sendRequest(new HttpPost(request));
 	}
 
@@ -149,13 +164,13 @@ public class VKapi {
 			System.out.println(vkResponse.getErrorMsg());
 
 		return vkResponse;
-	}
+	}*/
 
 	public int getUserId(String userDomain) {
-		String post = "https://api.vk.com/method/users.get?" +
-		        "user_ids=" + userDomain +
-		        "&v=" + version;
-		VKResponse vkResponse = sendRequest(post);
+		VKRequest request = new VKRequest(httpClient, "https://api.vk.com/method/users.get");
+		request.addParam("user_ids", userDomain);
+		request.addParam("v", version);
+		VKResponse vkResponse = request.send();
 
 		if (!vkResponse.isError())
 			try {
@@ -208,7 +223,7 @@ public class VKapi {
 	}
 
 	public void sendMessage(String userDomain, String message) {
-		message = encodeToURL(message);
+		/*message = encodeToURL(message);
 
 		System.out.println("Sending message: " + message);
 
@@ -217,7 +232,14 @@ public class VKapi {
 		        "&message=" + message +
 		        "&v=" + version +
 		        "&access_token=" + access_token;
-		sendRequest(post);
+		sendRequest(post);*/
+
+		VKRequest request = new VKRequest(httpClient, "https://api.vk.com/method/messages.send");
+		request.addParam("domain", userDomain);
+		request.addParam("message", message);
+		request.addParam("v", version);
+		request.addParam("access_token", access_token.toString());
+		request.send();
 	}
 
 	public void setStatus(String status) {
