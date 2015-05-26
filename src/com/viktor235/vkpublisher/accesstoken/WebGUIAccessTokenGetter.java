@@ -1,6 +1,5 @@
 package com.viktor235.vkpublisher.accesstoken;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,7 +32,6 @@ public class WebGUIAccessTokenGetter implements AccessTokenGetter {
 	}
 
 	private static void loadSwtJar() {
-	    
         String osName = System.getProperty("os.name").toLowerCase();
 		String osArch = System.getProperty("os.arch").toLowerCase();
 
@@ -61,7 +59,7 @@ public class WebGUIAccessTokenGetter implements AccessTokenGetter {
         //URL url = jarFile.toURI().toURL();
 	    loadJar(swtFileName);
 	}
-	
+
 	public static void loadJar(String fileName) {
 		try {
 	        URL url = VKPublisher.class.getClassLoader().getResource(fileName);
