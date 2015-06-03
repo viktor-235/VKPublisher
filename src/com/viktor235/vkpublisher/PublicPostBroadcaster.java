@@ -16,7 +16,7 @@ public class PublicPostBroadcaster extends Broadcaster {
 
 	@Override
 	public void execute() {
-		vkApi.postToWall(userOrPublicId, message, false);
+		vkApi.postToWall(userOrPublicId, message, null, false);
 	}
 
 }

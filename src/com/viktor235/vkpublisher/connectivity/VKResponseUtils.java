@@ -1,9 +1,7 @@
 package com.viktor235.vkpublisher.connectivity;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class VKResponseUtils {
 	private static JsonArray getResponseArray(VKResponse response)
@@ -15,7 +13,25 @@ public class VKResponseUtils {
 	{
 		return response.getJsonObject().getAsJsonObject("response");
 	}
-	
+
+	public static String findString(VKResponse response, String key) {
+		try {
+			return response.getJsonObject().get(key).getAsString();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Bad input params(" +
+					e.getMessage() + "): " + response);
+		}
+	}
+
+	public static int findInt(VKResponse response, String key) {
+		try {
+			return response.getJsonObject().get(key).getAsInt();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Bad input params(" +
+					e.getMessage() + "): " + response);
+		}
+	}
+
 	public static int getFirstUserId(VKResponse response) throws IllegalArgumentException {
 		try {
 			return getResponseArray(response).

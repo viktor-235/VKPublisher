@@ -1,24 +1,17 @@
 package com.viktor235.vkpublisher;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
-import com.viktor235.vkpublisher.connectivity.Request;
 import com.viktor235.vkpublisher.connectivity.VKRequest;
 import com.viktor235.vkpublisher.connectivity.VKResponse;
 import com.viktor235.vkpublisher.connectivity.VKResponseUtils;
@@ -258,7 +251,7 @@ public class VKapi {
 
 	// Post to User wall or Public wall. if owner_id == null then post to SELF
 	// user wall
-	public void postToWall(Integer owner_id, String message,
+	public void postToWall(Integer owner_id, String message, String attachments,
 			boolean fromGroupName) {
 		//message = encodeToURL(message);
 		/*String post = "https://api.vk.com/method/wall.post?"
@@ -274,6 +267,8 @@ public class VKapi {
 			request.addParam("owner_id", owner_id);
 		request.addParam("from_group", fromGroupName ? "1" : "0");
 		request.addParam("message", message);
+		if (attachments != null)
+			request.addParam("attachments", attachments);
 		request.addParam("v", version);
 		request.addParam("access_token", access_token.toString());
 		request.send();
@@ -310,38 +305,57 @@ public class VKapi {
 	public void uploadPhotoToWall(int groupID, byte[] photoByteArray) {
 		System.out.println("Getting upload server url");
 		String uploadServerURL = getWallUploadServer(groupID);
+		System.out.println(uploadServerURL);
 		HttpPost httppost = new HttpPost(uploadServerURL);
 		MultipartEntity mpEntity = new MultipartEntity();
 
-		/*
-		 * Pattern pat = Pattern.compile("[\\&\\?]hash=([0123456789abcdef]+)");
-		 * Matcher m = pat.matcher(uploadServerURL); m.find(); String hash =
-		 * m.group(1); System.out.println(hash);
-		 */
+		String param = "p";
+		Pattern pat = Pattern.compile("[\\&\\?]hash=([0123456789abcdef]+)");
+		Matcher m = pat.matcher(uploadServerURL); m.find(); String hash =
+		m.group(1); System.out.println(hash);
+		 
 
 		ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray,
-				"photo.jpg");
+				"Photo.jpg");
 		mpEntity.addPart("photo", byteArrayBody);
 
 		httppost.setEntity(mpEntity);
 
 		System.out.println("Sending photo to server");
 		VKResponse vkResponse = new VKResponse(VKRequest.execute(httpClient, httppost));
+		VKRequest vkRequest;
+		/*vkRequest = new VKRequest(httpClient, uploadServerURL);
+		vkRequest.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
+		//vkRequest.addParam("v", version);
+		//vkRequest.addParam("access_token", access_token.toString());
+		VKResponse vkResponse = vkRequest.send();*/
 
-		String server = VKResponseUtils.getServer(vkResponse);
-		String photo = VKResponseUtils.getPhoto(vkResponse);
-		String hash = VKResponseUtils.getHash(vkResponse);
+		//String server = VKResponseUtils.getServer(vkResponse);
+		//String photo = VKResponseUtils.getPhoto(vkResponse);
+		//String hash = VKResponseUtils.getHash(vkResponse);
+		
+		String server = VKResponseUtils.findString(vkResponse, "server");
+		String photo = VKResponseUtils.findString(vkResponse, "photo");
+		String hash = VKResponseUtils.findString(vkResponse, "hash");
 		System.out.println(server + "___" + photo + "___" + hash);
 
 		/* Save photo */
-		HttpPost httpPost = new HttpPost(
+		/*HttpPost httpPost = new HttpPost(
 				"https://api.vk.com/method/photos.saveWallPhoto");
 
 		String post = "https://api.vk.com/method/photos.saveWallPhoto?"
 				+ "server=" + server + "&photo=" + photo + "&hash=" + hash
-				+ "&v=" + version + "&access_token=" + access_token.toString();
+				+ "&v=" + version + "&access_token=" + access_token.toString();*/
 
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+		vkRequest = new VKRequest(httpClient, "https://api.vk.com/method/photos.saveWallPhoto");
+		vkRequest.addParam("group_id", groupID);
+		vkRequest.addParam("server", server);
+		vkRequest.addParam("photo", photo);
+		vkRequest.addParam("hash", hash);
+		vkRequest.addParam("v", version);
+		vkRequest.addParam("access_token", access_token.toString());
+
+		/*List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 		nameValuePairs.add(new BasicNameValuePair("access_token", access_token
 				.toString()));
 		nameValuePairs.add(new BasicNameValuePair("photo", photo));
@@ -361,8 +375,14 @@ public class VKapi {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+*/
+		//VKResponse response = new VKResponse(VKRequest.execute(httpClient, httpPost));
+		VKResponse response = vkRequest.send();
+		System.out.println("Saved");
 
-		VKResponse response = new VKResponse(VKRequest.execute(httpClient, httpPost));
-		//VKResponse response = sendRequest(httpPost);
+		int owner_id = VKResponseUtils.findInt(response, "id");
+		String media_id = VKResponseUtils.findString(response, "owner_id");
+		
+		postToWall(owner_id, "Test post from vk api", "photo" + owner_id + "_" + media_id, false);
 	}
 }

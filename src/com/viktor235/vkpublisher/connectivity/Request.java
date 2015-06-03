@@ -11,6 +11,7 @@ import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -38,6 +39,19 @@ public abstract class Request<T> {
 		addParam(name, String.valueOf(value));
 	}
 
+	/*public void addParam(String name, byte[] value) {
+		if (params == null)
+			params = new ArrayList<NameValuePair>();
+
+		ByteArrayBody byteArrayBody = new ByteArrayBody(value,
+				"photo.jpg");
+		mpEntity.addPart("photo", byteArrayBody);
+
+		httppost.setEntity(mpEntity);
+		
+		params.add(new BasicNameValuePair(name, value));
+	}*/
+
 	public String compileAndSend() {
 		UrlEncodedFormEntity entity = null;
 		try {
@@ -62,12 +76,12 @@ public abstract class Request<T> {
 		}
 
 		System.out.print("REQUEST: " + request);
-		try {
+		/*try {
 			System.out.println(" ENTITY: "
 					+ EntityUtils.toString(request.getEntity(), "UTF-8"));
 		} catch (ParseException | IOException e) {
 			System.out.println(e.getMessage());
-		}
+		}*/
 		System.out.println("RESPONSE: " + responseText);
 
 		return responseText;
