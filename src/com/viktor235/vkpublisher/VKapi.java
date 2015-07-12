@@ -319,7 +319,7 @@ public class VKapi {
 		System.out.println("Sending photo to server");
 //      FIXME
 //		VKResponse vkResponse = new VKResponse(Request.execute(httpClient, httppost));
-		Request Request;
+		Request vkRequest;
 		/*Request = new Request(httpClient, uploadServerURL);
 		Request.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
 		//Request.addParam("v", version);
@@ -346,13 +346,13 @@ public class VKapi {
 				+ "server=" + server + "&photo=" + photo + "&hash=" + hash
 				+ "&v=" + version + "&access_token=" + access_token.toString();*/
 
-		Request = new Request("https://api.vk.com/method/photos.saveWallPhoto");
-		Request.addParam("group_id", groupID);
-		Request.addParam("server", server);
-		Request.addParam("photo", photo);
-		Request.addParam("hash", hash);
-		Request.addParam("v", version);
-		Request.addParam("access_token", access_token.toString());
+		vkRequest = new Request("https://api.vk.com/method/photos.saveWallPhoto");
+		vkRequest.addParam("group_id", groupID);
+		vkRequest.addParam("server", server);
+		vkRequest.addParam("photo", photo);
+		vkRequest.addParam("hash", hash);
+		vkRequest.addParam("v", version);
+		vkRequest.addParam("access_token", access_token.toString());
 
 		/*List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 		nameValuePairs.add(new BasicNameValuePair("access_token", access_token
