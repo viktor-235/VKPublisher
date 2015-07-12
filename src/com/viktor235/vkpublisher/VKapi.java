@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.viktor235.vkpublisher.connectivity.VKClient;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -12,13 +13,13 @@ import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
-import com.viktor235.vkpublisher.connectivity.VKRequest;
+import com.viktor235.vkpublisher.connectivity.Request;
 import com.viktor235.vkpublisher.connectivity.VKResponse;
 import com.viktor235.vkpublisher.connectivity.VKResponseUtils;
 
 public class VKapi {
 	// private CloseableHttpClient httpClient;
-	private HttpClient httpClient;
+	private VKClient vkClient;
 	// private BasicHttpContext localContext;
 	// private BasicCookieStore cookieStore;
 
@@ -32,7 +33,7 @@ public class VKapi {
 
 	public VKapi() {
 		// httpClient = HttpClients.createDefault();
-		httpClient = new DefaultHttpClient();
+		this.vkClient = new VKClient(new DefaultHttpClient());
 
 		/*
 		 * this.cookieStore = new BasicCookieStore(); ((AbstractHttpClient)
@@ -98,13 +99,12 @@ public class VKapi {
 		 * !sendRequest(post).isError();
 		 */
 
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/users.search");
+		Request request = new Request("https://api.vk.com/method/users.search");
 		request.addParam("q", "Durov");
 		request.addParam("count", "1");
 		request.addParam("v", version);
 		request.addParam("access_token", accessToken);
-		VKResponse response = request.send();
+		VKResponse response = this.vkClient.execute(request);
 		return !response.isError();
 	}
 
@@ -142,11 +142,10 @@ public class VKapi {
 	 */
 
 	public int getUserId(String userDomain) {
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/users.get");
+		Request request = new Request("https://api.vk.com/method/users.get");
 		request.addParam("user_ids", userDomain);
 		request.addParam("v", version);
-		VKResponse vkResponse = request.send();
+		VKResponse vkResponse = this.vkClient.execute(request);
 
 		if (!vkResponse.isError())
 			try {
@@ -177,11 +176,10 @@ public class VKapi {
 		// access_token;
 		// VKResponse vkResponse = sendRequest(post);
 
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/messages.get");
+		Request request = new Request("https://api.vk.com/method/messages.get");
 		request.addParam("out", "0");
 		request.addParam("v", version);
-		VKResponse vkResponse = request.send();
+		VKResponse vkResponse = this.vkClient.execute(request);
 
 		return vkResponse.toString();
 	}
@@ -205,13 +203,13 @@ public class VKapi {
 		 * + access_token; sendRequest(post);
 		 */
 
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/messages.send");
+		Request request = new Request("https://api.vk.com/method/messages.send");
 		request.addParam("ser_id", userId);
 		request.addParam("message", message);
 		request.addParam("v", version);
 		request.addParam("access_token", access_token.toString());
-		request.send();
+
+		this.vkClient.execute(request);
 	}
 
 	public void sendMessage(String userDomain, String message) {
@@ -225,13 +223,12 @@ public class VKapi {
 		 * "&access_token=" + access_token; sendRequest(post);
 		 */
 
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/messages.send");
+		Request request = new Request("https://api.vk.com/method/messages.send");
 		request.addParam("domain", userDomain);
 		request.addParam("message", message);
 		request.addParam("v", version);
 		request.addParam("access_token", access_token.toString());
-		request.send();
+		this.vkClient.execute(request);
 	}
 
 	public void setStatus(String status) {
@@ -241,28 +238,26 @@ public class VKapi {
 		 * sendRequest(post);
 		 */
 
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/status.set");
+		Request request = new Request("https://api.vk.com/method/status.set");
 		request.addParam("text", status);
 		request.addParam("v", version);
 		request.addParam("access_token", access_token.toString());
-		request.send();
+		this.vkClient.execute(request);
 	}
 
 	// Post to User wall or Public wall. if owner_id == null then post to SELF
 	// user wall
 	public void postToWall(Integer owner_id, String message, String attachments,
-			boolean fromGroupName) {
+						   boolean fromGroupName) {
 		//message = encodeToURL(message);
 		/*String post = "https://api.vk.com/method/wall.post?"
 				+ (owner_id != null ? "owner_id=" + owner_id : "")
 				+ "&from_group=" + (fromGroupName ? "1" : "0") + "&message="
 				+ message + "&v=" + version + "&access_token=" + access_token;
 		sendRequest(post);*/
-		
 
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/wall.post");
+
+		Request request = new Request("https://api.vk.com/method/wall.post");
 		if (owner_id != null)
 			request.addParam("owner_id", owner_id);
 		request.addParam("from_group", fromGroupName ? "1" : "0");
@@ -271,7 +266,7 @@ public class VKapi {
 			request.addParam("attachments", attachments);
 		request.addParam("v", version);
 		request.addParam("access_token", access_token.toString());
-		request.send();
+		this.vkClient.execute(request);
 	}
 
 	/* Photo */
@@ -282,15 +277,14 @@ public class VKapi {
 				+ (groupId != 0 ? "group_id=" + Math.abs(groupId) : "") + "&v="
 				+ version + "&access_token=" + access_token;
 		VKResponse vkResponse = sendRequest(post);*/
-		
-		VKRequest request = new VKRequest(httpClient,
-				"https://api.vk.com/method/photos.getWallUploadServer");
+
+		Request request = new Request("https://api.vk.com/method/photos.getWallUploadServer");
 		if (groupId != 0)
 			request.addParam("group_id", Math.abs(groupId));
 		request.addParam("v", version);
 		request.addParam("access_token", access_token.toString());
-		VKResponse vkResponse = request.send();
-		
+		VKResponse vkResponse = this.vkClient.execute(request);
+
 		if (!vkResponse.isError())
 			try {
 				return VKResponseUtils.getUploadURL(vkResponse);
@@ -314,7 +308,7 @@ public class VKapi {
 		Matcher m = pat.matcher(uploadServerURL); m.find();
 		String hash =  m.group(1);
 		System.out.println(hash);
-		 
+
 
 		ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray,
 				"Photo.jpg");
@@ -323,18 +317,22 @@ public class VKapi {
 		httppost.setEntity(mpEntity);
 
 		System.out.println("Sending photo to server");
-		VKResponse vkResponse = new VKResponse(VKRequest.execute(httpClient, httppost));
-		VKRequest vkRequest;
-		/*vkRequest = new VKRequest(httpClient, uploadServerURL);
-		vkRequest.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
-		//vkRequest.addParam("v", version);
-		//vkRequest.addParam("access_token", access_token.toString());
-		VKResponse vkResponse = vkRequest.send();*/
+//      FIXME
+//		VKResponse vkResponse = new VKResponse(Request.execute(httpClient, httppost));
+		Request vkRequest;
+		/*Request = new Request(httpClient, uploadServerURL);
+		Request.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
+		//Request.addParam("v", version);
+		//Request.addParam("access_token", access_token.toString());
+		VKResponse vkResponse = Request.send();*/
 
 		//String server = VKResponseUtils.getServer(vkResponse);
 		//String photo = VKResponseUtils.getPhoto(vkResponse);
 		//String hash = VKResponseUtils.getHash(vkResponse);
-		
+
+		//FIXME delete
+		VKResponse vkResponse = null;
+
 		String server = VKResponseUtils.findString(vkResponse, "server");
 		String photo = VKResponseUtils.findString(vkResponse, "photo");
 		hash = VKResponseUtils.findString(vkResponse, "hash");
@@ -348,7 +346,7 @@ public class VKapi {
 				+ "server=" + server + "&photo=" + photo + "&hash=" + hash
 				+ "&v=" + version + "&access_token=" + access_token.toString();*/
 
-		vkRequest = new VKRequest(httpClient, "https://api.vk.com/method/photos.saveWallPhoto");
+		vkRequest = new Request("https://api.vk.com/method/photos.saveWallPhoto");
 		vkRequest.addParam("group_id", groupID);
 		vkRequest.addParam("server", server);
 		vkRequest.addParam("photo", photo);
@@ -377,13 +375,17 @@ public class VKapi {
 			e.printStackTrace();
 		}
 */
-		//VKResponse response = new VKResponse(VKRequest.execute(httpClient, httpPost));
-		VKResponse response = vkRequest.send();
+		//VKResponse response = new VKResponse(Request.execute(httpClient, httpPost));
+//      FIXME
+// VKResponse response = Request.send();
 		System.out.println("Saved");
+//
+		//      FIXME
+//		int owner_id = VKResponseUtils.findInt(response, "id");
+		//      FIXME
+//		String media_id = VKResponseUtils.findString(response, "owner_id");
+		//      FIXME
 
-		int owner_id = VKResponseUtils.findInt(response, "id");
-		String media_id = VKResponseUtils.findString(response, "owner_id");
-		
-		postToWall(owner_id, "Test post from vk api", "photo" + owner_id + "_" + media_id, false);
+//		postToWall(owner_id, "Test post from vk api", "photo" + owner_id + "_" + media_id, false);
 	}
 }
