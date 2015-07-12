@@ -62,20 +62,20 @@ public class VKResponseUtils {
 					e.getMessage() + "): " + response);
 		}
 	}
-	
+
 	public static String getPhoto(VKResponse response) throws IllegalArgumentException {
 		try {
 			String photo = response.getJsonObject().get("photo").getAsString();
 			/*JsonElement jsonElement = new JsonParser().parse(photo);
 			return jsonElement.getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsString();*/
 			return photo;
-			
+
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Bad input params(" +
 					e.getMessage() + "): " + response);
 		}
 	}
-	
+
 	public static String getHash(VKResponse response) throws IllegalArgumentException {
 		try {
 			return response.getJsonObject().get("hash").getAsString();
