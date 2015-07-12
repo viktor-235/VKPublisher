@@ -311,8 +311,9 @@ public class VKapi {
 
 		String param = "p";
 		Pattern pat = Pattern.compile("[\\&\\?]hash=([0123456789abcdef]+)");
-		Matcher m = pat.matcher(uploadServerURL); m.find(); String hash =
-		m.group(1); System.out.println(hash);
+		Matcher m = pat.matcher(uploadServerURL); m.find();
+		String hash =  m.group(1);
+		System.out.println(hash);
 		 
 
 		ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray,
@@ -336,7 +337,7 @@ public class VKapi {
 		
 		String server = VKResponseUtils.findString(vkResponse, "server");
 		String photo = VKResponseUtils.findString(vkResponse, "photo");
-		String hash = VKResponseUtils.findString(vkResponse, "hash");
+		hash = VKResponseUtils.findString(vkResponse, "hash");
 		System.out.println(server + "___" + photo + "___" + hash);
 
 		/* Save photo */
