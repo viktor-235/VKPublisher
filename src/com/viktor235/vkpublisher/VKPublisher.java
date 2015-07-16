@@ -18,7 +18,6 @@ public class VKPublisher {
 	private static String accessTokenFile = "at";
 
 	public static void main(String[] args) {
-		loadSwtJar();
 		VKapi vk = new VKapi();
 		AccessTokenGetter atg = new ComplexAccessTokenGetter(vk, accessTokenFile);
 
@@ -99,47 +98,5 @@ public class VKPublisher {
 		// Thread worker = new Thread(bc); worker.setDaemon(true); worker.run();
 
 		// vk.dispose();
-	}
-
-	private static void loadSwtJar() {
-		try {
-			String osName = System.getProperty("os.name").toLowerCase();
-			String osArch = System.getProperty("os.arch").toLowerCase();
-
-			/*
-			 * URLClassLoader classLoader = (URLClassLoader) VKPublisher.class.getClassLoader(); Method addUrlMethod =
-			 * URLClassLoader.class.getDeclaredMethod("addURL", URL.class); addUrlMethod.setAccessible(true);
-			 */
-
-			String swtFileNameOsPart = osName.contains("win") ? "win32" : osName.contains("linux")
-					|| osName.contains("nix") ? "linux-gtk" : osName.contains("mac") ? "osx" : "";
-			if (swtFileNameOsPart.isEmpty())
-				throw new Exception("Unsupported operation system");
-
-			String swtFileNameArchPart = osArch.contains("64") ? "x64" : "x86";
-			String swtFileName = "swt-" + swtFileNameOsPart + "-" + swtFileNameArchPart + ".jar";
-
-			/*
-			 * URL swtFileUrl = new URL("file://" + swtFileName); addUrlMethod.invoke(classLoader, swtFileUrl);
-			 */
-
-			// File jarFile = new File(swtFileName);
-			// URL url = jarFile.toURI().toURL();
-
-			URL url = VKPublisher.class.getClassLoader().getResource(swtFileName);
-			File file = new File(url.getFile());
-			System.out.println(file);
-			System.out.println(file.exists());
-			System.out.println(url);
-			// addUrlMethod.invoke(classLoader, url);
-
-			URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-			Class<?> urlClass = URLClassLoader.class;
-			Method method = urlClass.getDeclaredMethod("addURL", new Class<?>[] { URL.class });
-			method.setAccessible(true);
-			method.invoke(urlClassLoader, new Object[] { url });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }
