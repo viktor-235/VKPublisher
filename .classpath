@@ -22,9 +22,5 @@
 			<attribute name="javadoc_location" value="file:/home/victor.klochkov/Victor/Java/Libs/commons-io-2.4/commons-io-2.4-javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/swt-linux-gtk-x64.jar"/>
-	<classpathentry kind="lib" path="libs/swt-linux-gtk-x86.jar"/>
-	<classpathentry kind="lib" path="libs/swt-win32-x64.jar"/>
-	<classpathentry kind="lib" path="libs/swt-win32-x86.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
