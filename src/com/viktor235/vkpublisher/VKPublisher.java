@@ -1,23 +1,18 @@
 package com.viktor235.vkpublisher;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import org.apache.commons.io.IOUtils;
-
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
 import com.viktor235.vkpublisher.accesstoken.AccessTokenGetter;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.util.Properties;
 
 public class VKPublisher {
 	private static String accessTokenFile = "at";
 
 	public static void main(String[] args) {
+		loadProperties("app.properties");
+
 		VKapi vk = new VKapi();
 		AccessTokenGetter atg = new ComplexAccessTokenGetter(vk, accessTokenFile);
 
@@ -98,5 +93,20 @@ public class VKPublisher {
 		// Thread worker = new Thread(bc); worker.setDaemon(true); worker.run();
 
 		// vk.dispose();
+	}
+
+	private static void loadProperties(String fileName) {
+		FileInputStream input;
+		Properties properties = new Properties();
+		try {
+			input = new FileInputStream(fileName);
+			properties.load(input);
+			System.out.println(properties.getProperty("AccessTokenFile", "at"));
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
