@@ -2,19 +2,19 @@ package com.viktor235.vkpublisher;
 
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
 import com.viktor235.vkpublisher.accesstoken.AccessTokenGetter;
+import com.viktor235.vkpublisher.properties.ProjectProperties;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.util.Properties;
 
 public class VKPublisher {
-	private static String accessTokenFile = "at";
+	private final static String CONFIG_FILE = "config.properties";
 
 	public static void main(String[] args) {
-		loadProperties("app.properties");
+		ProjectProperties properties = new ProjectProperties(CONFIG_FILE);
 
 		VKapi vk = new VKapi();
-		AccessTokenGetter atg = new ComplexAccessTokenGetter(vk, accessTokenFile);
+		AccessTokenGetter atg = new ComplexAccessTokenGetter(vk, properties.getAccessTokenFileName());
 
 		AccessToken at = atg.getAccessToken();
 		if (at == null) {
@@ -47,7 +47,7 @@ public class VKPublisher {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		
+
 		File file = new File(path);
 		InputStream is = null;
 		try {
@@ -56,7 +56,7 @@ public class VKPublisher {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		byte[] bytes = null;
 		try {
 			bytes = IOUtils.toByteArray(is);
@@ -93,20 +93,5 @@ public class VKPublisher {
 		// Thread worker = new Thread(bc); worker.setDaemon(true); worker.run();
 
 		// vk.dispose();
-	}
-
-	private static void loadProperties(String fileName) {
-		FileInputStream input;
-		Properties properties = new Properties();
-		try {
-			input = new FileInputStream(fileName);
-			properties.load(input);
-			System.out.println(properties.getProperty("AccessTokenFile", "at"));
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

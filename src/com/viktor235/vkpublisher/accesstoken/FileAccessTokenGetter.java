@@ -1,8 +1,8 @@
 package com.viktor235.vkpublisher.accesstoken;
 
-import java.io.File;
-
 import com.viktor235.utils.FileUtils;
+
+import java.io.File;
 
 public class FileAccessTokenGetter implements AccessTokenGetter {
 	private String fileName = "at";
