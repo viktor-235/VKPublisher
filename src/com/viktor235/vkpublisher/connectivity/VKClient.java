@@ -20,17 +20,21 @@ public class VKClient {
 
     public VKResponse execute(Request request) {
         String responseText = null;
-        try {
-            request.compile();
+        request.compile();
+        return execute(request.getHttpPost());
+    }
 
-            HttpResponse response = client.execute(request.getHttpPost());
+    public VKResponse execute(HttpPost httpPost) {
+        String responseText = null;
+        try {
+            HttpResponse response = client.execute(httpPost);
             // IOUtils.toString(response.getEntity().getContent(), "UTF-8");
             responseText = EntityUtils.toString(response.getEntity(), "UTF-8");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        System.out.print("REQUEST: " + request);
+        System.out.println("REQUEST: " + httpPost.toString());
 		/*try {
 			System.out.println(" ENTITY: "
 					+ EntityUtils.toString(request.getEntity(), "UTF-8"));
@@ -41,7 +45,5 @@ public class VKClient {
 
         return new VKResponse(responseText);
     }
-
-
 
 }

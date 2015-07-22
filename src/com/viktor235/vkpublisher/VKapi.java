@@ -318,21 +318,17 @@ public class VKapi {
         httppost.setEntity(mpEntity);
 
         System.out.println("Sending photo to server");
-//      FIXME
-//		VKResponse vkResponse = new VKResponse(Request.execute(httpClient, httppost));
+        VKResponse vkResponse = vkClient.execute(httppost);
         Request vkRequest;
-		/*Request = new Request(httpClient, uploadServerURL);
-		Request.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
+		vkRequest = new Request(uploadServerURL);
+		vkRequest.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
 		//Request.addParam("v", version);
 		//Request.addParam("access_token", access_token.toString());
-		VKResponse vkResponse = Request.send();*/
+		vkResponse = vkClient.execute(vkRequest);
 
         //String server = VKResponseUtils.getServer(vkResponse);
         //String photo = VKResponseUtils.getPhoto(vkResponse);
         //String hash = VKResponseUtils.getHash(vkResponse);
-
-        //FIXME delete
-        VKResponse vkResponse = null;
 
         String server = VKResponseUtils.findString(vkResponse, "server");
         String photo = VKResponseUtils.findString(vkResponse, "photo");
@@ -340,12 +336,12 @@ public class VKapi {
         System.out.println(server + "___" + photo + "___" + hash);
 
 		/* Save photo */
-		/*HttpPost httpPost = new HttpPost(
+		HttpPost httpPost = new HttpPost(
 				"https://api.vk.com/method/photos.saveWallPhoto");
 
 		String post = "https://api.vk.com/method/photos.saveWallPhoto?"
 				+ "server=" + server + "&photo=" + photo + "&hash=" + hash
-				+ "&v=" + version + "&access_token=" + access_token.toString();*/
+				+ "&v=" + version + "&access_token=" + access_token.toString();
 
         vkRequest = new Request("https://api.vk.com/method/photos.saveWallPhoto");
         vkRequest.addParam("group_id", groupID);
@@ -378,15 +374,15 @@ public class VKapi {
 */
         //VKResponse response = new VKResponse(Request.execute(httpClient, httpPost));
 //      FIXME
-// VKResponse response = Request.send();
+        VKResponse response = vkClient.execute(vkRequest);
         System.out.println("Saved");
 //
         //      FIXME
-//		int owner_id = VKResponseUtils.findInt(response, "id");
+		int owner_id = VKResponseUtils.findInt(response, "id");
         //      FIXME
-//		String media_id = VKResponseUtils.findString(response, "owner_id");
+		String media_id = VKResponseUtils.findString(response, "owner_id");
         //      FIXME
 
-//		postToWall(owner_id, "Test post from vk api", "photo" + owner_id + "_" + media_id, false);
+		postToWall(owner_id, "Test post from vk api", "photo" + owner_id + "_" + media_id, false);
     }
 }
