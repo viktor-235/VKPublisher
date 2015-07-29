@@ -31,7 +31,7 @@ public class VKPublisher {
 
 		// System.out.println(vk.getWallUploadServer(62514768));
 
-		String path = "/home/victor.klochkov/Victor/Pictures/yxYxmf2Q1xY.jpg";
+		String path = "C:\\1.jpg";
 		
 		/*URL url = null;
 		try {
@@ -70,8 +70,7 @@ public class VKPublisher {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("picture loaded");
-		vk.uploadPhotoToWall(22107853, bytes);
+		vk.uploadPhotoToWall(vk.getUserId("viktor_klochkov"), bytes);
 
 		// SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss_dd.MM.yyy");
 

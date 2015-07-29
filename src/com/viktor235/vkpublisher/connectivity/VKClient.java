@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * Created by battlemaster on 12.07.15.
@@ -37,8 +38,8 @@ public class VKClient {
         System.out.println("REQUEST: " + httpPost.toString());
 		/*try {
 			System.out.println(" ENTITY: "
-					+ EntityUtils.toString(request.getEntity(), "UTF-8"));
-		} catch (ParseException | IOException e) {
+					+ EntityUtils.toString(httpPost.getEntity(), "UTF-8"));
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}*/
         System.out.println("RESPONSE: " + responseText);

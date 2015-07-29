@@ -32,6 +32,24 @@ public class VKResponseUtils {
 		}
 	}
 
+	public static String findStringInResponse(VKResponse response, String key) {
+		try {
+			return getResponseArray(response).get(0).getAsJsonObject().get(key).getAsString();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Bad input params(" +
+					e.getMessage() + "): " + response);
+		}
+	}
+
+	public static int findIntInResponse(VKResponse response, String key) {
+		try {
+			return getResponseArray(response).get(0).getAsJsonObject().get(key).getAsInt();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Bad input params(" +
+					e.getMessage() + "): " + response);
+		}
+	}
+
 	public static int getFirstUserId(VKResponse response) throws IllegalArgumentException {
 		try {
 			return getResponseArray(response).

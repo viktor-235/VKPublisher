@@ -32,23 +32,8 @@ public class VKapi {
     private AccessToken access_token = null;
 
     public VKapi() {
-        // httpClient = HttpClients.createDefault();
         this.vkClient = new VKClient(new DefaultHttpClient());
-
-		/*
-         * this.cookieStore = new BasicCookieStore(); ((AbstractHttpClient)
-		 * this.httpClient).setCookieStore(this.cookieStore); // Create local
-		 * HTTP context this.localContext = new BasicHttpContext(); // Bind
-		 * custom cookie store to the local context
-		 * this.localContext.setAttribute(ClientContext.COOKIE_STORE,
-		 * this.cookieStore);
-		 */
     }
-
-	/*
-     * public void dispose() { try { httpClient.close(); } catch (IOException e)
-	 * { e.printStackTrace(); } }
-	 */
 
     public String getConnectionUrl() {
         return "http://oauth.vk.com/authorize?" + "client_id=" + client_id
@@ -77,28 +62,6 @@ public class VKapi {
     }
 
     public boolean validateAccessToken(String accessToken) {
-        /*
-		 * String post = "https://api.vk.com/method/users.search?" + "q=Durov" +
-		 * "&count=1" + "&v=" + version + "&access_token=" + accessToken; return
-		 * !sendRequest(post).isError();
-		 */
-
-		/*
-		 * HttpPost post = new
-		 * HttpPost("https://api.vk.com/method/users.search");
-		 * List<NameValuePair> params = new ArrayList<NameValuePair>();
-		 * params.add(new BasicNameValuePair("q", "Durov")); params.add(new
-		 * BasicNameValuePair("count", "1")); params.add(new
-		 * BasicNameValuePair("v", version)); params.add(new
-		 * BasicNameValuePair("access_token", accessToken));
-		 * 
-		 * UrlEncodedFormEntity entity = null; try { entity = new
-		 * UrlEncodedFormEntity(params, "UTF-8"); } catch
-		 * (UnsupportedEncodingException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } post.setEntity(entity); return
-		 * !sendRequest(post).isError();
-		 */
-
         Request request = new Request("https://api.vk.com/method/users.search");
         request.addParam("q", "Durov");
         request.addParam("count", "1");
@@ -111,35 +74,6 @@ public class VKapi {
     public void setAccessToken(AccessToken accessToken) {
         access_token = accessToken;
     }
-
-	/*
-	 * public static String responseToString(HttpResponse response) throws
-	 * IllegalStateException, IOException { InputStreamReader isr = new
-	 * InputStreamReader(response.getEntity().getContent()); BufferedReader buff
-	 * = new BufferedReader(isr); StringBuffer strBuff = new StringBuffer();
-	 * 
-	 * String s; while ((s = buff.readLine()) != null) strBuff.append(s);
-	 * 
-	 * return strBuff.toString(); }
-	 */
-
-	/*
-	 * public VKResponse sendRequest(String request) { return sendRequest(new
-	 * HttpPost(request)); }
-	 * 
-	 * public VKResponse sendRequest(HttpPost request) { String jsonResponse =
-	 * null; try { HttpResponse response = httpClient.execute(request);
-	 * jsonResponse = IOUtils.toString(response.getEntity().getContent(),
-	 * "UTF-8"); } catch (IOException e) { System.out.println(e.getMessage()); }
-	 * 
-	 * System.out.println("REQUEST: " + request);
-	 * System.out.println("RESPONSE: " + jsonResponse);
-	 * 
-	 * VKResponse vkResponse = new VKResponse(jsonResponse); if
-	 * (vkResponse.isError()) System.out.println(vkResponse.getErrorMsg());
-	 * 
-	 * return vkResponse; }
-	 */
 
     public int getUserId(String userDomain) {
         Request request = new Request("https://api.vk.com/method/users.get");
@@ -171,11 +105,6 @@ public class VKapi {
 	 */
 
     public String getNewMessage() {
-        // String post =
-        // "https://api.vk.com/method/messages.get?out=0&access_token=" +
-        // access_token;
-        // VKResponse vkResponse = sendRequest(post);
-
         Request request = new Request("https://api.vk.com/method/messages.get");
         request.addParam("out", "0");
         request.addParam("v", version);
@@ -184,25 +113,15 @@ public class VKapi {
         return vkResponse.toString();
     }
 
-    public static String encodeToURL(String text) {
+    /*public static String encodeToURL(String text) {
         try {
             return URLEncoder.encode(text, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return "(Unsupported+Encoding)";
         }
-    }
+    }*/
 
     public void sendMessage(int userId, String message) {
-        // message = encodeToURL(message);
-
-		/*
-		 * System.out.println("Sending message: " + message);
-		 * 
-		 * String post = "https://api.vk.com/method/messages.send?" + "user_id="
-		 * + userId + "&message=" + message + "&v=" + version + "&access_token="
-		 * + access_token; sendRequest(post);
-		 */
-
         Request request = new Request("https://api.vk.com/method/messages.send");
         request.addParam("ser_id", userId);
         request.addParam("message", message);
@@ -213,16 +132,6 @@ public class VKapi {
     }
 
     public void sendMessage(String userDomain, String message) {
-		/*
-		 * message = encodeToURL(message);
-		 * 
-		 * System.out.println("Sending message: " + message);
-		 * 
-		 * String post = "https://api.vk.com/method/messages.send?" + "domain="
-		 * + userDomain + "&message=" + message + "&v=" + version +
-		 * "&access_token=" + access_token; sendRequest(post);
-		 */
-
         Request request = new Request("https://api.vk.com/method/messages.send");
         request.addParam("domain", userDomain);
         request.addParam("message", message);
@@ -232,12 +141,6 @@ public class VKapi {
     }
 
     public void setStatus(String status) {
-		/*
-		 * String post = "https://api.vk.com/method/status.set?" + "text=" +
-		 * status + "&v=" + version + "&access_token=" + access_token;
-		 * sendRequest(post);
-		 */
-
         Request request = new Request("https://api.vk.com/method/status.set");
         request.addParam("text", status);
         request.addParam("v", version);
@@ -248,15 +151,7 @@ public class VKapi {
     // Post to User wall or Public wall. if owner_id == null then post to SELF
     // user wall
     public void postToWall(Integer owner_id, String message, String attachments,
-                           boolean fromGroupName) {
-        //message = encodeToURL(message);
-		/*String post = "https://api.vk.com/method/wall.post?"
-				+ (owner_id != null ? "owner_id=" + owner_id : "")
-				+ "&from_group=" + (fromGroupName ? "1" : "0") + "&message="
-				+ message + "&v=" + version + "&access_token=" + access_token;
-		sendRequest(post);*/
-
-
+                boolean fromGroupName) {
         Request request = new Request("https://api.vk.com/method/wall.post");
         if (owner_id != null)
             request.addParam("owner_id", owner_id);
@@ -273,11 +168,6 @@ public class VKapi {
 
     // If groupId = 0 then upload to user wall
     public String getWallUploadServer(int groupId) {
-		/*String post = "https://api.vk.com/method/photos.getWallUploadServer?"
-				+ (groupId != 0 ? "group_id=" + Math.abs(groupId) : "") + "&v="
-				+ version + "&access_token=" + access_token;
-		VKResponse vkResponse = sendRequest(post);*/
-
         Request request = new Request("https://api.vk.com/method/photos.getWallUploadServer");
         if (groupId != 0)
             request.addParam("group_id", Math.abs(groupId));
@@ -303,47 +193,31 @@ public class VKapi {
         HttpPost httppost = new HttpPost(uploadServerURL);
         MultipartEntity mpEntity = new MultipartEntity();
 
-        String param = "p";
+        /*String param = "p";
         Pattern pat = Pattern.compile("[\\&\\?]hash=([0123456789abcdef]+)");
         Matcher m = pat.matcher(uploadServerURL);
         m.find();
         String hash = m.group(1);
-        System.out.println(hash);
+        System.out.println(hash);*/
 
 
         ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray,
-                "Photo.jpg");
+                "1.jpg");
         mpEntity.addPart("photo", byteArrayBody);
 
         httppost.setEntity(mpEntity);
 
         System.out.println("Sending photo to server");
         VKResponse vkResponse = vkClient.execute(httppost);
-        Request vkRequest;
-		vkRequest = new Request(uploadServerURL);
-		vkRequest.addParam("photo", "http://cs617924.vk.me/v617924768/20e01/WquFj-nL4eI.jpg");
-		//Request.addParam("v", version);
-		//Request.addParam("access_token", access_token.toString());
-		vkResponse = vkClient.execute(vkRequest);
-
-        //String server = VKResponseUtils.getServer(vkResponse);
-        //String photo = VKResponseUtils.getPhoto(vkResponse);
-        //String hash = VKResponseUtils.getHash(vkResponse);
 
         String server = VKResponseUtils.findString(vkResponse, "server");
         String photo = VKResponseUtils.findString(vkResponse, "photo");
-        hash = VKResponseUtils.findString(vkResponse, "hash");
+        String hash = VKResponseUtils.findString(vkResponse, "hash");
         System.out.println(server + "___" + photo + "___" + hash);
 
 		/* Save photo */
-		HttpPost httpPost = new HttpPost(
-				"https://api.vk.com/method/photos.saveWallPhoto");
 
-		String post = "https://api.vk.com/method/photos.saveWallPhoto?"
-				+ "server=" + server + "&photo=" + photo + "&hash=" + hash
-				+ "&v=" + version + "&access_token=" + access_token.toString();
-
-        vkRequest = new Request("https://api.vk.com/method/photos.saveWallPhoto");
+        Request vkRequest = new Request("https://api.vk.com/method/photos.saveWallPhoto");
         vkRequest.addParam("group_id", groupID);
         vkRequest.addParam("server", server);
         vkRequest.addParam("photo", photo);
@@ -372,17 +246,12 @@ public class VKapi {
 			e.printStackTrace();
 		}
 */
-        //VKResponse response = new VKResponse(Request.execute(httpClient, httpPost));
-//      FIXME
         VKResponse response = vkClient.execute(vkRequest);
         System.out.println("Saved");
-//
-        //      FIXME
-		int owner_id = VKResponseUtils.findInt(response, "id");
-        //      FIXME
-		String media_id = VKResponseUtils.findString(response, "owner_id");
-        //      FIXME
 
-		postToWall(owner_id, "Test post from vk api", "photo" + owner_id + "_" + media_id, false);
+		int media_id = VKResponseUtils.findIntInResponse(response, "id");
+		String owner_id = VKResponseUtils.findStringInResponse(response, "owner_id");
+
+        postToWall(groupID, "VK Api test message", "photo" + owner_id + "_" + media_id, false);
     }
 }
