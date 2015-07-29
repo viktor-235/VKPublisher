@@ -18,20 +18,24 @@ import com.viktor235.vkpublisher.connectivity.VKResponse;
 import com.viktor235.vkpublisher.connectivity.VKResponseUtils;
 
 public class VKapi {
-    // private CloseableHttpClient httpClient;
     private VKClient vkClient;
-    // private BasicHttpContext localContext;
-    // private BasicCookieStore cookieStore;
 
-    private String client_id = "4786761";
-    private String scope = "offline,messages,status,wall,photos";
-    private String redirect_uri = "http://oauth.vk.com/blank.html";
-    private String display = "popup";
-    private String response_type = "token";
-    private String version = "5.29";
+    private String client_id;
+    private String scope;
+    private String redirect_uri;
+    private String display;
+    private String response_type;
+    private String version;
     private AccessToken access_token = null;
 
-    public VKapi() {
+    public VKapi(String client_id, String scope, String redirect_uri,
+                 String display, String response_type , String version) {
+        this.client_id = client_id;
+        this.scope = scope;
+        this.redirect_uri = redirect_uri;
+        this.display = display;
+        this.response_type = response_type;
+        this.version = version;
         this.vkClient = new VKClient(new DefaultHttpClient());
     }
 

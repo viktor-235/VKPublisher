@@ -13,7 +13,8 @@ public class VKPublisher {
 	public static void main(String[] args) {
 		ProjectProperties properties = new ProjectProperties(CONFIG_FILE);
 
-		VKapi vk = new VKapi();
+		VKapi vk = new VKapi("4786761", "offline,messages,status,wall,photos",
+				"http://oauth.vk.com/blank.html", "popup", "token", "5.29");
 		AccessTokenGetter atg = new ComplexAccessTokenGetter(vk, properties.getAccessTokenFileName());
 
 		AccessToken at = atg.getAccessToken();
