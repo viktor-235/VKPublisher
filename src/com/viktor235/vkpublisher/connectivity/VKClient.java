@@ -1,50 +1,50 @@
 package com.viktor235.vkpublisher.connectivity;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.util.EntityUtils;
+import com.viktor235.vkpublisher.VKapi;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.ParseException;
+import java.io.InputStream;
 
 /**
- * Created by battlemaster on 12.07.15.
+ * Created by Виктор on 29.07.2015.
  */
 public class VKClient {
+	private VKapi vkApi;
 
-    private final HttpClient client;
+	public VKClient(VKapi vkApi) {
+		this.vkApi = vkApi;
+	}
 
-    public VKClient (HttpClient client) {
-        this.client = client;
-    }
+	// For group ID need prefix '-'
+	public void post(Integer userOrGroupID, VKPost post) {
+		vkApi.postToWall(userOrGroupID, post.getMessage(), post.getAttachments(vkApi, userOrGroupID), false);
+	}
 
-    public VKResponse execute(Request request) {
-        String responseText = null;
-        request.compile();
-        return execute(request.getHttpPost());
-    }
+	public void send(int userID, VKPost message) {
+		vkApi.sendMessage(userID, message.getMessage());
+	}
 
-    public VKResponse execute(HttpPost httpPost) {
-        String responseText = null;
-        try {
-            HttpResponse response = client.execute(httpPost);
-            // IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-            responseText = EntityUtils.toString(response.getEntity(), "UTF-8");
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+	public void saveDocument(String fileName, String title, String tags) {
+		File file = new File(fileName);
+		if (!file.exists()) {
+			System.out.println("Attachment file(" + fileName + ") not found");
+			return;
+		}
 
-        System.out.println("REQUEST: " + httpPost.toString());
-		/*try {
-			System.out.println(" ENTITY: "
-					+ EntityUtils.toString(httpPost.getEntity(), "UTF-8"));
+		byte[] bytes;
+		try(InputStream is = new FileInputStream(file)) {
+			bytes = IOUtils.toByteArray(is);
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}*/
-        System.out.println("RESPONSE: " + responseText);
+			e.printStackTrace();
+			return;
+		}
 
-        return new VKResponse(responseText);
-    }
-
+		String uploadServerURL = vkApi.docs_getUploadServer(null);
+		VKResponse response = vkApi.uploadFileToServer(uploadServerURL, "file", fileName, bytes);
+		String f = VKResponseUtils.findString(response, "file");
+		vkApi.docs_save(f, title, tags);
+	}
 }

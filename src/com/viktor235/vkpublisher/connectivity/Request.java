@@ -45,6 +45,8 @@ public class Request {
 
 	public Request compile() {
 		UrlEncodedFormEntity entity = null;
+		if (params == null)
+			return this;
 		try {
 			entity = new UrlEncodedFormEntity(params, "UTF-8");
 		} catch (UnsupportedEncodingException e) {

@@ -2,10 +2,10 @@ package com.viktor235.vkpublisher;
 
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
 import com.viktor235.vkpublisher.accesstoken.AccessTokenGetter;
+import com.viktor235.vkpublisher.connectivity.VKClient;
+import com.viktor235.vkpublisher.connectivity.VKDocFromFileAttachment;
+import com.viktor235.vkpublisher.connectivity.VKPost;
 import com.viktor235.vkpublisher.properties.ProjectProperties;
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
 
 public class VKPublisher {
 	private final static String CONFIG_FILE = "config.properties";
@@ -13,85 +13,42 @@ public class VKPublisher {
 	public static void main(String[] args) {
 		ProjectProperties properties = new ProjectProperties(CONFIG_FILE);
 
-		VKapi vk = new VKapi("4786761", "offline,messages,status,wall,photos",
-				"http://oauth.vk.com/blank.html", "popup", "token", "5.29");
-		AccessTokenGetter atg = new ComplexAccessTokenGetter(vk, properties.getAccessTokenFileName());
-
+		VKapi vkApi = new VKapi("5.29");
+		AccessTokenGetter atg = new ComplexAccessTokenGetter(vkApi, properties.getAccessTokenFileName());
 		AccessToken at = atg.getAccessToken();
 		if (at == null) {
 			System.out.println("Access token wasn't received");
 			return;
 		}
+		vkApi.setAccessToken(at);
 
-		vk.setAccessToken(at);
+		VKClient vkClient = new VKClient(vkApi);
 
-		vk.sendMessage("viktor_klochkov", "Test Message");
-		// System.out.println(vk.getNewMessage());
-		// System.out.println(vk.getUserId("rissolenka"));
-		// System.out.println(vk.getUserId("viktor_klochkov"));
+		//vkClient.send(vkApi.getUserId("viktor_klochkov"), new VKPost("Test message"));
 
-		// System.out.println(vk.getWallUploadServer(62514768));
+		/*VKPost post = new VKPost("VK Api test message");
+		vkClient.post(vkApi.getUserId("viktor_klochkov"), post);*/
 
-		String path = "C:\\1.jpg";
-		
-		/*URL url = null;
-		try {
-			url = new URL("http://moi-portal.ru/uploads/images/00/00/02/2013/05/30/dc70d6.jpg");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		InputStream is = null;
-		try {
-			is = url.openStream();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		/*VKPost post = new VKPost("VK Api test post");
+		post.addAttachment(new VKPhotoFromFileAttachment("C:\\1.jpg"));
+		post.addAttachment(new VKPhotoFromFileAttachment("C:\\2.jpg"));
+		//post.addAttachment(new VKPhotoFromFileAttachment("C:\\1.gif"));
+		vkClient.post(vkApi.getUserId("viktor_klochkov"), post);*/
 
-		File file = new File(path);
-		InputStream is = null;
-		try {
-			is = new FileInputStream(file);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		VKPost post = new VKPost("VK Api - test GIF");
+		post.addAttachment(new VKDocFromFileAttachment("C:\\2.gif"));
+		vkClient.post(null, post);
 
-		byte[] bytes = null;
-		try {
-			bytes = IOUtils.toByteArray(is);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			is.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		vk.uploadPhotoToWall(vk.getUserId("viktor_klochkov"), bytes);
+		//vkClient.saveDocument("C:\\2.gif", "Test file", "tag1, tag2");
 
-		// SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss_dd.MM.yyy");
+		// std_full
 
-		// vk.sendMessage("viktor_klochkov", sdf.format(new Date()));
-		// vk.sendMessage("viktor_klochkov", "Test Message");
-		// vk.postToWall(0, "Test_post_from_VK_api", true);
-
-		// vk.sendMessage("std_full", "LALKA1");
-		// vk.postToWall(62514768, "Test_post_from_VK_api", true);
-		// vk.getUrlForUploadPhotoToWall(0);
-
-		// PrivateMessageBroadcaster bc = new PrivateMessageBroadcaster(vk,
+		// PrivateMessageBroadcaster bc = new PrivateMessageBroadcaster(vkApi,
 		// 1000);
 		// bc.setParams("viktor_klochkov", "hello");
 
-		// PublicPostBroadcaster bc = new PublicPostBroadcaster(vk, 10000);
+		// PublicPostBroadcaster bc = new PublicPostBroadcaster(vkApi, 10000);
 		// bc.setParams(-22107853, "Test_message_from_VK.api");
-
 		// Thread worker = new Thread(bc); worker.setDaemon(true); worker.run();
-
-		// vk.dispose();
 	}
 }
