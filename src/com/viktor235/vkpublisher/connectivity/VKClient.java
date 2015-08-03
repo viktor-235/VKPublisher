@@ -20,11 +20,11 @@ public class VKClient {
 
 	// For group ID need prefix '-'
 	public void post(Integer userOrGroupID, VKPost post) {
-		vkApi.postToWall(userOrGroupID, post.getMessage(), post.getAttachments(vkApi, userOrGroupID), false);
+		vkApi.wall_post(userOrGroupID, post.getMessage(), post.getAttachments(vkApi, userOrGroupID), false);
 	}
 
 	public void send(int userID, VKPost message) {
-		vkApi.sendMessage(userID, message.getMessage());
+		vkApi.messages_send(userID, message.getMessage());
 	}
 
 	public void saveDocument(String fileName, String title, String tags) {

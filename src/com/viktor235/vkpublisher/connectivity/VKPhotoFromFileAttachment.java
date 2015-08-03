@@ -28,7 +28,7 @@ public class VKPhotoFromFileAttachment implements VKAttachment {
 	}
 
 	public String getAttachment(VKapi vkApi, Integer userOrGroupID) {
-		String uploadServerURL = vkApi.getWallUploadServer(userOrGroupID);
+		String uploadServerURL = vkApi.photos_getWallUploadServer(userOrGroupID);
 		VKResponse response;
 
 		response = vkApi.uploadFileToServer(uploadServerURL, "photo", fileName, bytes);

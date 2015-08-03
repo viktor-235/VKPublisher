@@ -27,16 +27,16 @@ public class VKPublisher {
 		//vkClient.send(vkApi.getUserId("viktor_klochkov"), new VKPost("Test message"));
 
 		/*VKPost post = new VKPost("VK Api test message");
-		vkClient.post(vkApi.getUserId("viktor_klochkov"), post);*/
+		vkClient.post(vkApi.users_get("viktor_klochkov"), post);*/
 
 		/*VKPost post = new VKPost("VK Api test post");
 		post.addAttachment(new VKPhotoFromFileAttachment("C:\\1.jpg"));
 		post.addAttachment(new VKPhotoFromFileAttachment("C:\\2.jpg"));
 		//post.addAttachment(new VKPhotoFromFileAttachment("C:\\1.gif"));
-		vkClient.post(vkApi.getUserId("viktor_klochkov"), post);*/
+		vkClient.post(vkApi.users_get("viktor_klochkov"), post);*/
 
 		VKPost post = new VKPost("VK Api - test GIF");
-		post.addAttachment(new VKDocFromFileAttachment("C:\\2.gif"));
+		post.addAttachment(new VKDocFromFileAttachment("content\\2.gif"));
 		vkClient.post(null, post);
 
 		//vkClient.saveDocument("C:\\2.gif", "Test file", "tag1, tag2");

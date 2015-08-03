@@ -18,7 +18,7 @@ public class PrivateMessageBroadcaster extends Broadcaster {
 	@Override
 	public void execute() {
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss_dd.MM.yyy");
-		vkApi.sendMessage(userDomain, message + "_" + sdf.format(new Date()));
+		vkApi.messages_send(userDomain, message + "_" + sdf.format(new Date()));
 	}
 
 }

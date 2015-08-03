@@ -65,7 +65,7 @@ public class VKapi {
         access_token = accessToken;
     }
 
-    public int getUserId(String userDomain) {
+    public int users_get(String userDomain) {
         Request request = new Request(METHOD_PATH + "users.get");
         request.addParam("user_ids", userDomain);
         request.addParam("v", version);
@@ -94,7 +94,7 @@ public class VKapi {
 	 * System.out.println("Error in ID parsing"); return 0; }
 	 */
 
-    public String getNewMessage() {
+    public String messages_get() {
         Request request = new Request(METHOD_PATH + "messages.get");
         request.addParam("out", "0");
         request.addParam("v", version);
@@ -103,15 +103,7 @@ public class VKapi {
         return vkResponse.toString();
     }
 
-    /*public static String encodeToURL(String text) {
-        try {
-            return URLEncoder.encode(text, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return "(Unsupported+Encoding)";
-        }
-    }*/
-
-    public void sendMessage(int userId, String message) {
+    public void messages_send(int userId, String message) {
         Request request = new Request(METHOD_PATH + "messages.send");
         request.addParam("user_id", userId);
         request.addParam("message", message);
@@ -120,7 +112,7 @@ public class VKapi {
         this.requestHandler.execute(request);
     }
 
-    public void sendMessage(String userDomain, String message) {
+    public void messages_send(String userDomain, String message) {
         Request request = new Request(METHOD_PATH + "messages.send");
         request.addParam("domain", userDomain);
         request.addParam("message", message);
@@ -129,7 +121,7 @@ public class VKapi {
         this.requestHandler.execute(request);
     }
 
-    public void setStatus(String status) {
+    public void status_set(String status) {
         Request request = new Request(METHOD_PATH + "status.set");
         request.addParam("text", status);
         request.addParam("v", version);
@@ -139,7 +131,7 @@ public class VKapi {
 
     // Post to User wall or Public wall. if owner_id == null then post to SELF
     // user wall
-    public void postToWall(Integer owner_id, String message, String attachments,
+    public void wall_post(Integer owner_id, String message, String attachments,
                 boolean fromGroupName) {
         Request request = new Request(METHOD_PATH + "wall.post");
         if (owner_id != null)
@@ -154,7 +146,7 @@ public class VKapi {
     }
 
     // If groupId = 0 then upload to user wall
-    public String getWallUploadServer(int userOrGroupID) {
+    public String photos_getWallUploadServer(int userOrGroupID) {
         Request request = new Request(METHOD_PATH + "photos.getWallUploadServer");
         if (userOrGroupID != 0)
             request.addParam("group_id", Math.abs(userOrGroupID));
