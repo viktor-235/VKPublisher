@@ -10,8 +10,12 @@ import com.viktor235.vkpublisher.accesstoken.AccessToken;
 import com.viktor235.vkpublisher.connectivity.Request;
 import com.viktor235.vkpublisher.connectivity.VKResponse;
 import com.viktor235.vkpublisher.connectivity.VKResponseUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class VKapi {
+    private final static Logger logger = LogManager.getLogger();
+
     private HttpRequestHandler requestHandler;
 
     private String version;
@@ -31,8 +35,7 @@ public class VKapi {
                 + "&display=" + display + "&response_type=" + response_type;
     }
 
-    public String parseAccessToken(String urlWithAT) {
-        // System.out.println(urlWithAT);
+    public static String parseAccessToken(String urlWithAT) {
         if (urlWithAT == null)
             return null;
         String accessToken = urlWithAT, startKey = "#access_token=", endKey = "&";
@@ -47,7 +50,6 @@ public class VKapi {
         if (atEnd < 0)
             return accessToken;
 
-        // System.out.println(accessToken.substring(0, atEnd));
         return accessToken.substring(0, atEnd);
     }
 
@@ -75,8 +77,7 @@ public class VKapi {
             try {
                 return VKResponseUtils.getFirstUserId(vkResponse);
             } catch (IllegalArgumentException e) {
-                System.out.println("Error in user ID parsing: "
-                        + e.getMessage());
+                logger.error("Error in user ID parsing: " + e.getMessage());
                 return 0;
             }
         return 0;
@@ -166,8 +167,7 @@ public class VKapi {
             try {
                 return VKResponseUtils.getUploadURL(vkResponse);
             } catch (IllegalArgumentException e) {
-                System.out.println("Error in response parsing: "
-                        + e.getMessage());
+                logger.error("Error in response parsing: " + e.getMessage());
                 return null;
             }
         return null;
@@ -252,8 +252,7 @@ public class VKapi {
             try {
                 return VKResponseUtils.getUploadURL(vkResponse);
             } catch (IllegalArgumentException e) {
-                System.out.println("Error in response parsing: "
-                        + e.getMessage());
+                logger.error("Error in response parsing: " + e.getMessage());
                 return null;
             }
         return null;
@@ -272,8 +271,7 @@ public class VKapi {
             try {
                 return VKResponseUtils.getUploadURL(vkResponse);
             } catch (IllegalArgumentException e) {
-                System.out.println("Error in response parsing: "
-                        + e.getMessage());
+                logger.error("Error in response parsing: " + e.getMessage());
                 return null;
             }
         return null;

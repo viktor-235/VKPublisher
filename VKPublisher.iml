@@ -62,7 +62,7 @@
           <root url="jar://$MODULE_DIR$/libs/gson-2.2.4.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="file:/home/victor.klochkov/Victor/Java/Libs/google-gson-2.2.4/gson-2.2.4-javadoc/" />
+          <root url="file:$USER_HOME$/Victor/Java/Libs/google-gson-2.2.4/gson-2.2.4-javadoc/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MODULE_DIR$/libs/gson-2.2.4-sources.jar!/" />
@@ -138,7 +138,7 @@
           <root url="jar://$MODULE_DIR$/libs/commons-io-2.4.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="file:/home/victor.klochkov/Victor/Java/Libs/commons-io-2.4/commons-io-2.4-javadoc/" />
+          <root url="file:$USER_HOME$/Victor/Java/Libs/commons-io-2.4/commons-io-2.4-javadoc/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$MODULE_DIR$/libs/commons-io-2.4-sources.jar!/" />
@@ -182,5 +182,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="jdk1.8" level="project" />
+    <orderEntry type="library" name="log4j-api-2.3" level="project" />
+    <orderEntry type="library" name="log4j-core-2.3" level="project" />
   </component>
 </module>

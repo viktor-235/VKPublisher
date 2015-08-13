@@ -6,6 +6,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -14,6 +16,8 @@ import java.text.ParseException;
  * Created by battlemaster on 12.07.15.
  */
 public class HttpRequestHandler {
+    private final static Logger logger = LogManager.getLogger();
+
     private final HttpClient client;
 
     public HttpRequestHandler(HttpClient client) {
@@ -36,18 +40,20 @@ public class HttpRequestHandler {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("REQUEST: " + httpPost.toString());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("REQUEST: ").append(httpPost.toString());
 		try {
             HttpEntity entity = httpPost.getEntity();
-            System.out.print("  ENTITY: ");
+            stringBuilder.append("  ENTITY: ");
             if (entity instanceof MultipartEntity)
-                System.out.println("MultipartEntity...");
+                stringBuilder.append("MultipartEntity...");
             else
-                System.out.println(EntityUtils.toString(entity, "UTF-8"));
+                stringBuilder.append(EntityUtils.toString(entity, "UTF-8"));
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+            logger.error(e);
 		}
-        System.out.println("RESPONSE: " + responseText);
+        logger.trace(stringBuilder.toString());
+        logger.trace("RESPONSE: " + responseText);
 
         return new VKResponse(responseText);
     }

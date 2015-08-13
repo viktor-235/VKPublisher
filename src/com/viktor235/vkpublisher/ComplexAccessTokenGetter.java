@@ -4,8 +4,12 @@ import com.viktor235.utils.FileUtils;
 import com.viktor235.vkpublisher.accesstoken.AccessToken;
 import com.viktor235.vkpublisher.accesstoken.AccessTokenGetter;
 import com.viktor235.vkpublisher.accesstoken.FileAccessTokenGetter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ComplexAccessTokenGetter implements AccessTokenGetter {
+	private final static Logger logger = LogManager.getLogger();
+
 	private VKapi vkApi;
 	private String accessTokenFile;
 
@@ -23,7 +27,7 @@ public class ComplexAccessTokenGetter implements AccessTokenGetter {
 		((FileAccessTokenGetter) atg).setFileName(accessTokenFile);
 		at = atg.getAccessToken();
 		if (at != null && at.isValid(vkApi)) {
-			System.out.println("Access token was received from file");
+			logger.info("Access token was received from file");
 			return at;
 		}
 
