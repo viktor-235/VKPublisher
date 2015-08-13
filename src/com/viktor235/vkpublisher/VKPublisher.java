@@ -13,10 +13,6 @@ public class VKPublisher {
 	private final static String CONFIG_FILE = "config.properties";
 
 	public static void main(String[] args) {
-		//PropertyConfigurator.configureAndWatch("file");
-		logger.error("Test error");
-		logger.debug("Test debug");
-		logger.trace("Test trace");
 		ProjectProperties properties = new ProjectProperties(CONFIG_FILE);
 
 		VKapi vkApi = new VKapi("5.29");
