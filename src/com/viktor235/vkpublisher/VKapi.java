@@ -165,11 +165,11 @@ public class VKapi {
         return null;
     }
 
-    public VKResponse uploadFileToServer(String uploadServerURL, String requestParam, String fileName, byte[] photoByteArray) {
+    public VKResponse uploadFileToServer(String uploadServerURL, String requestParam, String fileName, byte[] byteArray) {
         HttpPost httppost = new HttpPost(uploadServerURL);
         MultipartEntity mpEntity = new MultipartEntity();
 
-        ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray, fileName);
+        ByteArrayBody byteArrayBody = new ByteArrayBody(byteArray, fileName);
         mpEntity.addPart(requestParam, byteArrayBody);
 
         httppost.setEntity(mpEntity);
@@ -189,45 +189,6 @@ public class VKapi {
         vkRequest.addParam("access_token", access_token.toString());
         return requestHandler.execute(vkRequest);
     }
-
-    /*public void uploadPhotoToWall(int userOrGroupID, byte[] photoByteArray) {
-        System.out.println("Getting upload server url");
-        String uploadServerURL = getWallUploadServer(userOrGroupID);
-        System.out.println(uploadServerURL);
-        HttpPost httppost = new HttpPost(uploadServerURL);
-        MultipartEntity mpEntity = new MultipartEntity();
-
-        ByteArrayBody byteArrayBody = new ByteArrayBody(photoByteArray,
-                "1.jpg");
-        mpEntity.addPart("photo", byteArrayBody);
-
-        httppost.setEntity(mpEntity);
-
-        System.out.println("Sending photo to server");
-        VKResponse vkResponse = requestHandler.execute(httppost);
-
-        String server = VKResponseUtils.findString(vkResponse, "server");
-        String photo = VKResponseUtils.findString(vkResponse, "photo");
-        String hash = VKResponseUtils.findString(vkResponse, "hash");
-        System.out.println(server + "___" + photo + "___" + hash);
-
-		// Save photo
-
-        Request vkRequest = new Request(METHOD_PATH + "photos.saveWallPhoto");
-        vkRequest.addParam("group_id", userOrGroupID);
-        vkRequest.addParam("server", server);
-        vkRequest.addParam("photo", photo);
-        vkRequest.addParam("hash", hash);
-        vkRequest.addParam("v", version);
-        vkRequest.addParam("access_token", access_token.toString());
-        VKResponse response = requestHandler.execute(vkRequest);
-        System.out.println("Saved");
-
-		int media_id = VKResponseUtils.findIntInResponse(response, "id");
-		String owner_id = VKResponseUtils.findStringInResponse(response, "owner_id");
-
-        postToWall(userOrGroupID, "VK Api test message", "photo" + owner_id + "_" + media_id, false);
-    }*/
 
     /* Docs */
 

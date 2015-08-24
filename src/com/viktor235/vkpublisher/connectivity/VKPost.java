@@ -1,6 +1,7 @@
 package com.viktor235.vkpublisher.connectivity;
 
 import com.viktor235.vkpublisher.VKapi;
+import com.viktor235.vkpublisher.connectivity.attachment.Attachment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class VKPost {
 	private String message;
-	private List<VKAttachment> attachments;
+	private List<Attachment> attachments;
 
 	public VKPost() {
 		attachments = new ArrayList<>();
@@ -25,7 +26,7 @@ public class VKPost {
 		this.message = message;
 	}
 
-	public void addAttachment(VKAttachment attachment) {
+	public void addAttachment(Attachment attachment) {
 		attachments.add(attachment);
 	}
 
@@ -37,7 +38,7 @@ public class VKPost {
 		String result = "";
 		if (attachments.isEmpty())
 			return null;
-		for (VKAttachment attachment : attachments)
+		for (Attachment attachment : attachments)
 			result += attachment.getAttachment(vkApi, groupID) + ",";
 		return result;
 	}
